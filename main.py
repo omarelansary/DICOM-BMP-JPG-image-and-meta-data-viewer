@@ -30,8 +30,9 @@ class MainWindow(QtWidgets.QMainWindow):
         if self.path != ('', ''):
             self.data = self.path[0]
             print("File path: " + self.data)
-            if self.data.endswith(".DCM"):
+            if self.data.find(".dcm") !=-1:
                 self.readdatadicom()
+                self.displaymetadatadicom()
             else:
                 self.ui.ImageDisplay_label.setPixmap(QPixmap(self.data))
                 self.ui.ImageDisplay_label.setScaledContents(1)
@@ -56,7 +57,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.BDdisplay_label.setText(str(self.bitsperpixel))
 
     def readdatadicom(self):
-        self.datafordicom=self.data.replace("C:/My Data/College Courses/5_Fifth HEM term Fall 2022/Image Processing/Task 0 by me/","")
+        self.datafordicom=self.data[self.data.rfind('/')+1:]
         fpath = get_testdata_file(self.datafordicom)
         self.ds = dcmread(fpath)
         print(self.ds)
@@ -66,19 +67,19 @@ class MainWindow(QtWidgets.QMainWindow):
         self.imgheight=self.ds['Columns']
         self.imgwidth=self.ds['Rows']
         #self.imgmode=image.mode
-        self.filesizeinbit=self.ds['Bits Allocated']
-        self.bitsperpixel=round(self.filesizeinbit/(self.imgwidth*self.imgheight),3)
-        self.patientAge=self.ds['Patients Age']
-        self.patientName=self.ds['Patients Name']
+        #self.filesizeinbit=self.ds['BitsAllocated']
+        #self.bitsperpixel=round(self.filesizeinbit/(self.imgwidth*self.imgheight),3)
+        self.patientAge=self.ds['PatientAge']
+        self.patientName=self.ds['PatientName']
         self.imgModalitity=self.ds['Modality']
         #self.bodypartexamineted=self.ds['BodyPartExamined']
 
-    def diplaymetadatadicom(self):
+    def displaymetadatadicom(self):
         self.ui.IWdisplay_label.setText(str(self.imgwidth))    
         self.ui.IHdisplay_label.setText(str(self.imgheight))
         #self.ui.ICdisplay_label.setText(str(self.imgmode))
-        self.ui.ISdisplay_label.setText(str(self.filesizeinbit))
-        self.ui.BDdisplay_label.setText(str(self.bitsperpixel))
+        #self.ui.ISdisplay_label.setText(str(self.filesizeinbit))
+        #self.ui.BDdisplay_label.setText(str(self.bitsperpixel))
         self.ui.ModalityUsed_label.setText(str(self.imgModalitity))
         self.ui.PAdisplay_label.setText(str(self.patientAge))
         self.ui.PNdisplay_label.setText(str(self.patientName))
