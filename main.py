@@ -55,6 +55,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.ICdisplay_label.setText(str(self.imgmode))
         self.ui.ISdisplay_label.setText(str(self.filesizeinbit))
         self.ui.BDdisplay_label.setText(str(self.bitsperpixel))
+        self.ui.MUdisplay_label.setText("Not Available")
+        self.ui.PNdisplay_label.setText("Not Available")
+        self.ui.PAdisplay_label.setText("Not Available")
+        self.ui.BPdisplay_label.setText("Not Available")
 
     def readdatadicom(self):
         self.datafordicom=self.data[self.data.rfind('/')+1:]
@@ -64,26 +68,26 @@ class MainWindow(QtWidgets.QMainWindow):
         imageio.imwrite('outfile.jpg',self.ds.pixel_array)
         self.ui.ImageDisplay_label.setPixmap(QPixmap('outfile.jpg'))
         self.ui.ImageDisplay_label.setScaledContents(1)
-        self.imgheight=self.ds['Columns']
-        self.imgwidth=self.ds['Rows']
-        #self.imgmode=image.mode
-        #self.filesizeinbit=self.ds['BitsAllocated']
-        #self.bitsperpixel=round(self.filesizeinbit/(self.imgwidth*self.imgheight),3)
-        self.patientAge=self.ds['PatientAge']
-        self.patientName=self.ds['PatientName']
-        self.imgModalitity=self.ds['Modality']
-        #self.bodypartexamineted=self.ds['BodyPartExamined']
+        self.imgheight=self.ds.Columns
+        self.imgwidth=self.ds.Rows
+        self.imgmode=self.ds.PhotometricInterpretation
+        self.filesizeinbit=self.ds.BitsStored
+        self.bitsperpixel=round(self.filesizeinbit/(self.imgwidth*self.imgheight),3)
+        self.patientAge=self.ds.PatientAge
+        self.patientName=self.ds.PatientName
+        self.imgModalitity=self.ds.Modality
+        self.bodypartexamineted=self.ds.StudyDescription
 
     def displaymetadatadicom(self):
         self.ui.IWdisplay_label.setText(str(self.imgwidth))    
         self.ui.IHdisplay_label.setText(str(self.imgheight))
-        #self.ui.ICdisplay_label.setText(str(self.imgmode))
-        #self.ui.ISdisplay_label.setText(str(self.filesizeinbit))
-        #self.ui.BDdisplay_label.setText(str(self.bitsperpixel))
-        self.ui.ModalityUsed_label.setText(str(self.imgModalitity))
+        self.ui.ICdisplay_label.setText(str(self.imgmode))
+        self.ui.ISdisplay_label.setText(str(self.filesizeinbit))
+        self.ui.BDdisplay_label.setText(str(self.bitsperpixel))
+        self.ui.MUdisplay_label.setText(str(self.imgModalitity))
         self.ui.PAdisplay_label.setText(str(self.patientAge))
         self.ui.PNdisplay_label.setText(str(self.patientName))
-        #self.ui.BPdisplay_label.setText(str(self.bodypartexamineted))
+        self.ui.BPdisplay_label.setText(str(self.bodypartexamineted))
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
